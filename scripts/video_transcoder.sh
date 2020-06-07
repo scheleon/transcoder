@@ -29,6 +29,8 @@ mkdir -p "$outputDirectory/$outputFileNamePrefix/video"
 mkdir -p "$outputDirectory/$outputFileNamePrefix/audio"
 
 
+echo '#!/bin/sh' > ./scripts/cleaner.sh
+
 echo '#!/bin/sh' > ./scripts/mpd_generator.sh
 echo './scripts/packager \' >> ./scripts/mpd_generator.sh
 
@@ -40,6 +42,8 @@ if [ $currentBitrate -gt 800 ]; then
 	
 	echo "input=$outputDirectory/$outputFileNamePrefix-720p.mp4,stream=video,output=$outputDirectory/video/video720p.mp4 \\" >> ./scripts/mpd_generator.sh
 	echo "input=$outputDirectory/$outputFileNamePrefix-720p.mp4,stream=audio,output=$outputDirectory/audio/audio720p.mp4 \\" >> ./scripts/mpd_generator.sh
+
+	echo "rm -rf $outputDirectory/$outputFileNamePrefix-720p.mp4" >> ./scripts/cleaner.sh
 fi
 
 if [ $currentBitrate -gt 400 ]; then
@@ -50,6 +54,8 @@ if [ $currentBitrate -gt 400 ]; then
 
 	echo "input=$outputDirectory/$outputFileNamePrefix-540p.mp4,stream=video,output=$outputDirectory/video/video540p.mp4 \\" >> ./scripts/mpd_generator.sh
 	echo "input=$outputDirectory/$outputFileNamePrefix-540p.mp4,stream=audio,output=$outputDirectory/audio/audio540p.mp4 \\" >> ./scripts/mpd_generator.sh
+
+	echo "rm -rf $outputDirectory/$outputFileNamePrefix-540p.mp4" >> ./scripts/cleaner.sh
 fi
 
 ffmpeg -y -i "$videoFile" -c:a aac -ac 2 -ab 64k -ar 22050 \
@@ -60,6 +66,8 @@ ffmpeg -y -i "$videoFile" -c:a aac -ac 2 -ab 64k -ar 22050 \
 echo "input=$outputDirectory/$outputFileNamePrefix-360p.mp4,stream=video,output=$outputDirectory/video/video360p.mp4 \\" >> ./scripts/mpd_generator.sh
 echo "input=$outputDirectory/$outputFileNamePrefix-360p.mp4,stream=audio,output=$outputDirectory/audio/audio360p.mp4 \\" >> ./scripts/mpd_generator.sh
 
+echo "rm -rf $outputDirectory/$outputFileNamePrefix-360p.mp4" >> ./scripts/cleaner.sh
+
 echo '--profile on-demand \' >> ./scripts/mpd_generator.sh
 echo "--mpd_output \"$mpdLocation/$outputFileNamePrefix-manifest-full.mpd\" \\"  >> ./scripts/mpd_generator.sh
 echo '--min_buffer_time 3 \' >> ./scripts/mpd_generator.sh
@@ -67,3 +75,6 @@ echo '--segment_duration 3' >> ./scripts/mpd_generator.sh
 
 chmod +x ./scripts/mpd_generator.sh
 ./scripts/mpd_generator.sh
+
+chmod +x ./scripts/cleaner.sh
+./scripts/cleaner.sh
