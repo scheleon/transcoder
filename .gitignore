@@ -1,0 +1,5 @@
+node_modules
+mpd_files
+uploads
+videos
+mpd_generator.sh
