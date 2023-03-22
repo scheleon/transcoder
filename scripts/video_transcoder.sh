@@ -5,6 +5,7 @@ if [ $# -lt 5 ]; then
         exit 1;
 fi
 
+rm -rf ./scripts/cleaner.sh ./scripts/mpd_generator.sh
 
 # First argument ==> location of the file
 # Second argument  ==> ouput directory
@@ -28,6 +29,7 @@ mkdir -p "$outputDirectory/$outputFileNamePrefix"
 mkdir -p "$outputDirectory/$outputFileNamePrefix/video"
 mkdir -p "$outputDirectory/$outputFileNamePrefix/audio"
 
+outputDirectory="$outputDirectory/$outputFileNamePrefix"
 
 echo '#!/bin/sh' > ./scripts/cleaner.sh
 
